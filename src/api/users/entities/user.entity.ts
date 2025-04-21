@@ -13,5 +13,5 @@ export class UserEntity{
 
     @Column()
     foto:string;
-
+    
 }
