@@ -5,13 +5,12 @@ export class UserEntity{
     @ObjectIdColumn()
     _id: ObjectId;
 
-    @Column()
-    email:string;
+    @Column({ unique: true })
+    ci: string;
     
     @Column({length:200})
     password:string;
 
     @Column()
     foto:string;
-    
 }

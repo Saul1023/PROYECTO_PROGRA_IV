@@ -10,9 +10,9 @@ export class AuthController {
     ){}
 
     @Post('login')
-    singIn(@Body() {email,password}:SingInDto){
+    singIn(@Body() {ci,password}:SingInDto){
         console.log("88");
-        return this.authService.signIn(email, password);
+        return this.authService.signIn(ci, password);
     }
     @Post('create')
     create(@Body() user:SingInDto){

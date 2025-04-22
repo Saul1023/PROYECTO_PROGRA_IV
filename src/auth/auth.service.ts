@@ -9,8 +9,8 @@ export class AuthService {
         private jwtService:JwtService
     ){}
 
-    async signIn(email: string, password: string) {
-        const user = await this.userServices.find(email);
+    async signIn(ci: string, password: string) {
+        const user = await this.userServices.find(ci);
       
         if (!user) {
           throw new UnauthorizedException('Error de acceso');
@@ -27,7 +27,7 @@ export class AuthService {
         const token = await this.jwtService.signAsync(
           {
             id: user._id,
-            email: user.email,
+            ci: user.ci,
           },
           {
             secret: 'Hola mundo cruel...',

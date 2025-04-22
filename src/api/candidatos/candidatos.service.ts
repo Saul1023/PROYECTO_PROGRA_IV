@@ -1,11 +1,11 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CandidatoEntity } from './entities/candidato.entity';
-import { ObjectId, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { PartidoEntity } from '../partidos/entities/partido.entity';
 import { NewDto } from './dto/new.dto';
 import { EditDto } from './dto/edit.dto';
-
+import { ObjectId } from 'mongodb';
 @Injectable()
 export class CandidatosService {
     constructor(
@@ -37,7 +37,6 @@ export class CandidatosService {
           activo: dto.activo ?? true,
           partido: partido,
         });
-    
         return await this.candidatoRepository.save(nuevoCandidato);
       }
 

@@ -7,10 +7,11 @@ import { CandidatoEntity } from '../candidatos/entities/candidato.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PartidoEntity, CandidatoEntity])
+    TypeOrmModule.forFeature([PartidoEntity, CandidatoEntity]),
+    PartidosModule,
 ],
   providers: [PartidosService],
   controllers: [PartidosController],
-  exports: [PartidosService]
+  exports: [PartidosService,TypeOrmModule]
 })
 export class PartidosModule {}

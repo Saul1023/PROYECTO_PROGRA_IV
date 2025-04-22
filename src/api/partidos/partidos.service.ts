@@ -17,24 +17,19 @@ export class PartidosService {
         return this.partidoRepository.find();
       }
     
-      public async crearPartido(nombre: string, lema: string): Promise<PartidoEntity> {
-        const nuevoPartido = this.partidoRepository.create({
-          nombre,
-          lema,
-        });
-        console.log('Creando nuevo partido:', nuevoPartido);
-        return await this.partidoRepository.save(nuevoPartido);
+      public async create(dto: NewPartidoDto): Promise<PartidoEntity> {
+        const partido = this.partidoRepository.create(dto);
+        return await this.partidoRepository.save(partido);
       }
-    
       public async add(partido: PartidoEntity): Promise<PartidoEntity> {
         return await this.partidoRepository.save(partido);
       }
     
-      public async edit(id: number, partido: Partial<PartidoEntity>) {
-        return await this.partidoRepository.update(id, partido);
+      public async edit(id: string, updateData: Partial<PartidoEntity>) {
+        return await this.partidoRepository.update(id, updateData);
       }
-    
-      public async delete(id: number) {
+      
+      public async delete(id: string) {
         return await this.partidoRepository.delete(id);
       }
 }

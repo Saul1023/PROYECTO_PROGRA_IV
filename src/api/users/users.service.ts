@@ -10,11 +10,12 @@ export class UsersService {
         @InjectRepository(UserEntity)
             private readonly userRepository:Repository<UserEntity>,
     ){}
-    public async find(email:string){
-        return await this.userRepository
-        .findOne({where:{
-            email:email
-        }});
+    public async find(ci: string) {
+        return await this.userRepository.findOne({
+            where: {
+                ci: ci,
+            },
+        });
     }
     public async add(user){
         user.password = bcrypt.hashSync(user.password, 10);
