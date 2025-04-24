@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { VotacionEntity } from './entity/votacion.entity';
 import { Repository } from 'typeorm';
@@ -17,20 +17,29 @@ export class VotacionService {
     
       async votar(dto: CreateVotacionDto): Promise<VotacionEntity> {
         const candidato = await this.candidatoRepository.findOne({
-          where: { _id: new ObjectId(dto.candidatoId) }
+            where: { _id: new ObjectId(dto.candidatoId) },
         });
     
         if (!candidato) {
-          throw new NotFoundException('Candidato no encontrado');
+            throw new NotFoundException('Candidato no encontrado');
         }
-    
-        const voto = this.votacionRepository.create({
-          candidato,
-          fechaVoto: new Date(),
+        const votoExistente = await this.votacionRepository.findOne({
+            where: {
+                usuarioId: dto.usuarioId,
+                "candidato._id": { $eq: new ObjectId(dto.candidatoId) }
+            } as any,
         });
     
-        return this.votacionRepository.save(voto);
-      }
+        if (votoExistente) {
+            throw new BadRequestException('Ya votaste por este candidato.');
+        }
+        const nuevoVoto = this.votacionRepository.create({
+            usuarioId: dto.usuarioId,
+            candidato,
+            fechaVoto: new Date(),
+        });
+        return this.votacionRepository.save(nuevoVoto);
+    }
     
       async resultados() {
         const votos = await this.votacionRepository.find({ relations: ['candidato'] });
