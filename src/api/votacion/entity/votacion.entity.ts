@@ -14,4 +14,7 @@ export class VotacionEntity {
   
   @Column()
   fechaVoto: Date;
+
+  @Column()
+  cantidadVotos: number;
 }

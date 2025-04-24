@@ -37,7 +37,14 @@ export class VotacionService {
             usuarioId: dto.usuarioId,
             candidato,
             fechaVoto: new Date(),
+            cantidadVotos: 1, 
         });
+    
+        const existingVotes = await this.votacionRepository.find({
+            where: { "candidato._id": { $eq: new ObjectId(dto.candidatoId) } } as any,
+        });
+        nuevoVoto.cantidadVotos += existingVotes.length;
+    
         return this.votacionRepository.save(nuevoVoto);
     }
     

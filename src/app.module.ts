@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Res } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -10,6 +10,8 @@ import { PropuestasModule } from './api/propuestas/propuestas.module';
 import { GaleriaModule } from './api/galeria/galeria.module';
 import { VotacionModule } from './api/votacion/votacion.module';
 import { CronogramaModule } from './api/cronograma/cronograma.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 @Module({
   imports: [AuthModule,
     TypeOrmModule.forRoot({
@@ -33,6 +35,11 @@ import { CronogramaModule } from './api/cronograma/cronograma.module';
     CronogramaModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor
+    }
+  ],
 })
 export class AppModule {}
