@@ -11,8 +11,9 @@ export class VotacionController {
       return this.votacionesService.votar(dto);
     }
   
+
     @Get('resultados')
     resultados() {
-      return this.votacionesService.resultados();
+      return this.votacionesService.resultadosPorPartido();
     }
 }

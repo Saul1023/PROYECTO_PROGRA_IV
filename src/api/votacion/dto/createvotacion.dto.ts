@@ -1,15 +1,20 @@
-import { IsString, IsNotEmpty, IsDateString } from "class-validator";
+import { IsString, IsNotEmpty, IsMongoId, IsDate, IsDateString } from "class-validator";
+import { ObjectId } from "mongodb";
 
 export class CreateVotacionDto {
-  @IsString()
   @IsNotEmpty()
-  candidatoId: string;
+  @IsMongoId()
+  presidenteId: string;
 
-  @IsString()
   @IsNotEmpty()
-  usuarioId: string; 
+  @IsMongoId()
+  vicepresidenteId: string;
 
+  @IsNotEmpty()
+  @IsMongoId()
+  usuarioId: string; // ID del usuario que vota
+
+  @IsNotEmpty()
   @IsDateString()
-  @IsNotEmpty()
   fechaVoto: string;
 }
