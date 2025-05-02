@@ -14,6 +14,9 @@ export class PartidoEntity {
   @Column()
   lema: string;
   
+  @Column({ default: 1 })
+  estado: number;
+
   @OneToMany(() => CandidatoEntity, (candidato) => candidato.partido)
   candidatos: CandidatoEntity[];
 }

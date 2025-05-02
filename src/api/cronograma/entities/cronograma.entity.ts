@@ -16,6 +16,12 @@ export class CronogramaEntity {
   @Column({ nullable: true })
   descripcion?: string;
 
-  @ManyToOne(() => CandidatoEntity, candidato => candidato.cronograma)
-  candidato: CandidatoEntity;
+  @Column({ default: 1 })
+  estado: number;
+
+  /*@ManyToOne(() => CandidatoEntity, candidato => candidato.cronograma)
+  candidato: CandidatoEntity;*/
+  @ManyToOne(() => CandidatoEntity, candidato => candidato.cronograma, { nullable: true })
+  candidato?: CandidatoEntity;
+
 }

@@ -1,4 +1,4 @@
-import { IsBoolean, IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDateString, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export enum Puesto {
   PRESIDENTE = 'presidente',
@@ -15,8 +15,7 @@ export class NewDto {
   apellido: string;
 
   @IsDateString()
-  @IsNotEmpty()
-  fechaNacimiento: Date;
+  fechaNacimiento?: string;
 
   @IsString()
   @IsOptional()
@@ -26,11 +25,11 @@ export class NewDto {
   @IsNotEmpty()
   puesto: Puesto;
 
-  @IsBoolean()
   @IsOptional()
-  activo?: boolean;
+  @IsInt()
+  estado?: number;
 
   @IsString()
-  @IsNotEmpty()
-  partidoId: string;
+  @IsOptional()
+  partidoId?: string;
 }

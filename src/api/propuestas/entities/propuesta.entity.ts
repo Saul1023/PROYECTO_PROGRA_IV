@@ -15,6 +15,9 @@ export class PropuestaEntity {
   @Column({ type: 'date' })
   fechaPropuesta: Date;
 
+  @Column({ default: 1 })
+  estado: number;
+
   @ManyToOne(() => CandidatoEntity, candidato => candidato.propuestas)
   candidato: CandidatoEntity;
 }

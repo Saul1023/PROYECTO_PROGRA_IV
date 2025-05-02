@@ -15,5 +15,6 @@ export class NewCronogramaDto {
 
   @IsString()
   @IsNotEmpty()
-  candidatoId: string;
+  @IsOptional()
+  candidatoId?: string;
 }

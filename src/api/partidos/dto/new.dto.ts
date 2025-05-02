@@ -1,4 +1,4 @@
-import { IsString, IsDateString, IsUrl, IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsDateString, IsUrl, IsBoolean, IsNotEmpty, IsOptional, IsInt } from 'class-validator';
 import { Entity } from 'typeorm';
 
 export class NewPartidoDto {
@@ -7,4 +7,9 @@ export class NewPartidoDto {
   
     @IsString()
     lema: string;
-}
+
+    @IsOptional()
+    @IsInt()
+    estado?: number;
+  
+}   

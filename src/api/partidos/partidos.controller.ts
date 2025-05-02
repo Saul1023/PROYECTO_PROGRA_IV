@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { PartidosService } from './partidos.service';
 import { NewPartidoDto } from './dto/new.dto';
 
@@ -6,14 +6,26 @@ import { NewPartidoDto } from './dto/new.dto';
 export class PartidosController {
     constructor(private readonly partidosService: PartidosService) {}
 
-    @Get()
-    async list() {
-      return await this.partidosService.list();
+    @Get('')
+    public index() {
+      return this.partidosService.list();
     }
-  
+    
+    @Get('/search')
+    public searchPaginar(
+      @Query('page') page:number,
+      @Query('limit') limit:number,
+      @Query('search') search:string,
+    ){
+      page = page===undefined?0:page;
+      limit = limit===undefined?10:limit;
+      console.log("datos",page,limit,search);
+      return this.partidosService.searchPaginate(page,limit,search);
+    }
+
     @Post()
-    async create(@Body() createPartidoDto: NewPartidoDto) {
-      return await this.partidosService.create(createPartidoDto);
+    public create(@Body() createPartidoDto: NewPartidoDto) {
+      return this.partidosService.create(createPartidoDto);
     }
   
     @Put(':id')

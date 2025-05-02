@@ -16,17 +16,17 @@ export class CandidatoEntity {
   @Column()
   apellido: string;
 
-  @Column()
+  @Column({type: 'date'})
   fechaNacimiento: Date;
 
   @Column({ nullable: true })
   biografia?: string;
 
   @Column()
-  puesto: string;
+  puesto: string; 
 
-  @Column({ default: true })
-  activo: boolean;
+  @Column({ default: 1 })
+  estado: number;
 
   @ManyToOne(() => PartidoEntity, (partido) => partido.candidatos)
   partido: PartidoEntity;

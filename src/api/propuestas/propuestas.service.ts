@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PropuestaEntity } from './entities/propuesta.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CandidatoEntity } from '../candidatos/entities/candidato.entity';
 import { CreatePropuestaDto } from './dto/create_propuesta.dto';
 import { ObjectId } from 'mongodb';
 import { UpdatePropuestaDto } from './dto/update_propuesta.dto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class PropuestasService {
@@ -17,27 +18,75 @@ export class PropuestasService {
         private candidatoRepository: Repository<CandidatoEntity>,
       ) {}
     
-      async create(dto: CreatePropuestaDto) {
-        const candidato = await this.candidatoRepository.findOneBy({
-          _id: new ObjectId(dto.candidatoId),
+      
+      public async list(): Promise<PropuestaEntity[]> {
+          return await this.propuestaRepository.find({order:{titulo:'ASC'}});
+        }    
+
+
+async searchPaginate(page: number, limit: number, search: string) {
+        const skip = page * limit;
+      
+        const where = search
+          ? { titulo: Like(`%${search}%`) }
+          : {};
+      
+        const [result, total] = await this.propuestaRepository.findAndCount({
+          where,
+          skip,
+          take: limit,
+          relations: ['candidatos'],
         });
-    
-        if (!candidato) {
-          throw new NotFoundException('Candidato no encontrado');
+
+        const data = plainToClass(PropuestaEntity, result);
+      
+        return {
+          data: data,
+          total,
+          page,
+          limit,
+        };
+      }
+
+        async add(dto: CreatePropuestaDto): Promise<PropuestaEntity> {
+          let candidato: CandidatoEntity | null = null;
+        
+          if (dto.candidatoId) {
+            candidato = await this.candidatoRepository.findOneBy({ _id: new ObjectId(dto.candidatoId) });
+            if (!candidato) throw new NotFoundException('Candidato no encontrado');
+          }
+        
+          const nuevoEvento = this.propuestaRepository.create({
+            titulo: dto.titulo,
+            descripcion: dto.descripcion,
+            candidato: candidato || undefined,  // puede omitirse si null
+          });
+        
+          return await this.propuestaRepository.save(nuevoEvento);
         }
-    
-        const propuesta = this.propuestaRepository.create({
-          titulo: dto.titulo,
+
+      /*
+      async add(dto: CreatePropuestaDto): Promise<PropuestaEntity> {
+        let candidato: CandidatoEntity | null = null;
+      
+        if (dto.candidatoId) {
+          candidato = await this.propuestaRepository.findOneBy({ _id: new ObjectId(dto.candidatoId) });
+          if (!candidato) throw new NotFoundException('Candidato no encontrado');
+        }
+      
+        const nuevoEvento = this.cronogramaRepo.create({
+          actividad: dto.actividad,
+          fecha: dto.fecha,
           descripcion: dto.descripcion,
-          candidato,
+          candidato: candidato || undefined,  // puede omitirse si null
         });
-    
-        return this.propuestaRepository.save(propuesta);
+      
+        return await this.cronogramaRepo.save(nuevoEvento);
       }
     
       findAll() {
         return this.propuestaRepository.find({ relations: ['candidato'] });
-      }
+      }*/
     
       findOne(id: string) {
         return this.propuestaRepository.findOne({
@@ -65,5 +114,10 @@ export class PropuestasService {
           throw new NotFoundException('Propuesta no encontrada');
         }
         return { message: 'Propuesta eliminada' };
+      }
+
+      public async activar(id){
+        return await this.propuestaRepository.update(id,{estado:1});
+        //return await this.unidadRepository.delete(id);
       }
 }

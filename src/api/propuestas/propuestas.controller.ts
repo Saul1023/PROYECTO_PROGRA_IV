@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { CreatePropuestaDto } from './dto/create_propuesta.dto';
 import { PropuestasService } from './propuestas.service';
 import { UpdatePropuestaDto } from './dto/update_propuesta.dto';
@@ -7,14 +7,25 @@ import { UpdatePropuestaDto } from './dto/update_propuesta.dto';
 export class PropuestasController {
     constructor(private readonly propuestasService: PropuestasService) {}
 
-  @Post()
-  create(@Body() dto: CreatePropuestaDto) {
-    return this.propuestasService.create(dto);
-  }
 
-  @Get()
-  findAll() {
-    return this.propuestasService.findAll();
+  @Post()
+  add(@Body() dto: CreatePropuestaDto) {
+    return this.propuestasService.add(dto);
+  }
+    @Get('/search')
+        public searchPaginar(
+          @Query('page') page:number,
+          @Query('limit') limit:number,
+          @Query('search') search:string,
+        ){
+          page = page===undefined?0:page;
+          limit = limit===undefined?10:limit;
+          console.log("datos",page,limit,search);
+          return this.propuestasService.searchPaginate(page,limit,search);
+        }
+  @Get('')
+  public index() {
+    return this.propuestasService.list();
   }
 
   @Get(':id')

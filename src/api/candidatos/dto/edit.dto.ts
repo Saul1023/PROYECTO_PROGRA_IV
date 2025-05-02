@@ -6,4 +6,8 @@ export class EditDto extends PartialType(NewDto) {
   @IsString()
   @IsOptional()
   partidoId?: string;
+
+  @IsString()
+  @IsOptional()
+  fechaNacimiento?: string;
 }
