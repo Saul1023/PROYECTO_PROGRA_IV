@@ -25,7 +25,8 @@ export class PartidosService {
           where={ 
             '$or':[
             {nombre:  { $regex: search, $options: 'i' }},
-            {lema: { $regex: search, $options: 'i' }}
+            {lema: { $regex: search, $options: 'i' }},
+            {foto: { $regex: search, $options: 'i' }},
           ]
           }
         }

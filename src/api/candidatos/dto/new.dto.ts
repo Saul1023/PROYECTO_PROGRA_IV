@@ -25,6 +25,11 @@ export class NewDto {
   @IsNotEmpty()
   puesto: Puesto;
 
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  foto: string;
+
   @IsOptional()
   @IsInt()
   estado?: number;

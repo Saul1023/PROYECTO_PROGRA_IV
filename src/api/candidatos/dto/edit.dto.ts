@@ -10,4 +10,5 @@ export class EditDto extends PartialType(NewDto) {
   @IsString()
   @IsOptional()
   fechaNacimiento?: string;
+
 }

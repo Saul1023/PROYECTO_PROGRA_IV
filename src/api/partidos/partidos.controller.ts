@@ -1,6 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { PartidosService } from './partidos.service';
 import { NewPartidoDto } from './dto/new.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { extname } from 'path';
+import { diskStorage } from 'multer';
 
 @Controller('partidos')
 export class PartidosController {
@@ -27,7 +30,28 @@ export class PartidosController {
     public create(@Body() createPartidoDto: NewPartidoDto) {
       return this.partidosService.create(createPartidoDto);
     }
-  
+    
+    @Post('upload')
+    @UseInterceptors(FileInterceptor('foto', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+        },
+      }),
+    }))
+    async createWithImage(
+      @UploadedFile() file: Express.Multer.File,
+      @Body() createPartidoDto: NewPartidoDto
+    ) {
+      if (file) {
+        createPartidoDto.foto = `http://localhost:3000/uploads/${file.filename}`;
+      }
+      return this.partidosService.create(createPartidoDto);
+    }
+
     @Put(':id')
     async update(
       @Param('id') id: string,

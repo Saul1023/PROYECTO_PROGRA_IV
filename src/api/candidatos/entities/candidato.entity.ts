@@ -25,11 +25,14 @@ export class CandidatoEntity {
   @Column()
   puesto: string; 
 
+  @Column({ nullable: true })
+  foto?: string;
+
   @Column({ default: 1 })
   estado: number;
 
-  @ManyToOne(() => PartidoEntity, (partido) => partido.candidatos)
-  partido: PartidoEntity;
+  @ManyToOne(() => PartidoEntity, (partido) => partido.candidatos, { nullable: true })
+  partido?: PartidoEntity;
   @OneToMany(() => PropuestaEntity, (propuesta) => propuesta.candidato)
   propuestas: PropuestaEntity[];
   @OneToMany(() => GaleriaEntity, (galeria) => galeria.candidato)

@@ -9,6 +9,10 @@ export class NewPartidoDto {
     lema: string;
 
     @IsOptional()
+    @IsString()
+    foto?: string;
+
+    @IsOptional()
     @IsInt()
     estado?: number;
   

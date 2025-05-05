@@ -14,6 +14,9 @@ export class PartidoEntity {
   @Column()
   lema: string;
   
+  @Column({ nullable: true })
+  foto: string;
+
   @Column({ default: 1 })
   estado: number;
 
