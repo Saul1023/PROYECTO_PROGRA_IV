@@ -39,7 +39,7 @@ export class CandidatosController {
       if (!ObjectId.isValid(id)) {
         throw new BadRequestException('ID inválido');
       }
-      // Resto del código...
+      return await this.candidatosService.edit(id, candidato);
     }
   
     @Put('/activar/:id')
@@ -50,5 +50,15 @@ export class CandidatosController {
     @Delete(':id')
     public borrar(@Param('id') id: string) {
       return this.candidatosService.delete(id);
+    }
+
+    @Get('votos')
+    async obtenerVotos() {
+      const resultado = await this.candidatosService.obtenerVotosPorCandidato();
+      return {
+        success: true,
+        message: 'Votos por candidato',
+        data: resultado,
+      };
     }
 }

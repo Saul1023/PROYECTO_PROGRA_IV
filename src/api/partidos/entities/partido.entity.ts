@@ -1,6 +1,6 @@
 // partidos/entities/partido.entity.ts
 import { CandidatoEntity } from 'src/api/candidatos/entities/candidato.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ObjectIdColumn, ObjectId } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ObjectIdColumn, ObjectId, OneToOne, JoinColumn } from 'typeorm';
 
 
 @Entity({name :'partido'})
@@ -22,4 +22,11 @@ export class PartidoEntity {
 
   @OneToMany(() => CandidatoEntity, (candidato) => candidato.partido)
   candidatos: CandidatoEntity[];
+
+  @Column('objectId')
+  presidenteId: ObjectId;
+  
+  @Column('objectId')
+  vicepresidenteId: ObjectId;
+
 }

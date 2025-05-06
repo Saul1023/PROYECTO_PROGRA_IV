@@ -38,5 +38,8 @@ export class CandidatoEntity {
   @OneToMany(() => GaleriaEntity, (galeria) => galeria.candidato)
   galeria: GaleriaEntity[];
   @OneToMany(() => CronogramaEntity, cronograma => cronograma.candidato)
-  cronograma: CronogramaEntity[]; 
+  cronograma: CronogramaEntity[];
+
+  @Column({ default: 0 })
+  cantidadVotos: number;
 }

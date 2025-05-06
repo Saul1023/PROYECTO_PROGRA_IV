@@ -7,9 +7,15 @@ export class UserEntity{
 
     @Column({ unique: true })
     ci: string;
+
+    @Column()
+    fechaRegistro: Date;
     
     @Column({length:200})
     password:string;
+
+    @Column()
+    rol: string; 
 
     @Column()
     foto:string;

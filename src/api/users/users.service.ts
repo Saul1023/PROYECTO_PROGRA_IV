@@ -17,8 +17,9 @@ export class UsersService {
             },
         });
     }
-    public async add(user){
+    public async add(user) {
         user.password = bcrypt.hashSync(user.password, 10);
         return await this.userRepository.save(user);
     }
+    
 }

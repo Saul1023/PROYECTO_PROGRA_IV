@@ -28,13 +28,14 @@ export class AuthService {
           {
             id: user._id,
             ci: user.ci,
+            rol: user.rol,
           },
           {
             secret: 'Hola mundo cruel...',
             expiresIn: '1h',
           },
         );
-      
-        return { access_token: token };
+        
+        return { access_token: token, rol: user.rol };
       }
 }

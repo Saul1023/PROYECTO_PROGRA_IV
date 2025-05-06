@@ -16,8 +16,9 @@ export class VotacionEntity {
   @Column()
   fechaVoto: Date;
 
-  @Column({ type: 'string' }) 
-  usuarioId: string;
+  @Column()
+  ci: string;
+
   @Column()
   partidoId: string;
 } 

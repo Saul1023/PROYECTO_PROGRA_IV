@@ -6,6 +6,8 @@ import { PartidoEntity } from '../partidos/entities/partido.entity';
 import { NewDto } from './dto/new.dto';
 import { EditDto } from './dto/edit.dto';
 import { ObjectId } from 'mongodb';
+import { VotacionEntity } from '../votacion/entity/votacion.entity';
+import { Socket } from 'src/shared/socket';
 @Injectable()
 export class CandidatosService {
   constructor(
@@ -13,8 +15,10 @@ export class CandidatosService {
     private candidatoRepository: Repository<CandidatoEntity>,
     @InjectRepository(PartidoEntity)
     private partidoRepository: Repository<PartidoEntity>,
+    @InjectRepository(VotacionEntity)
+    private votacionRepository: Repository<VotacionEntity>,
   ) {}
-
+  private socket:Socket
   public list(): Promise<CandidatoEntity[]> {
     return this.candidatoRepository.find({
       relations: ['partido'],
@@ -181,5 +185,36 @@ export class CandidatosService {
 
     return { message: 'Candidato activado correctamente' };
   }
+
+  public async obtenerVotosPorCandidato() {
+    try {
+      const candidatos = await this.candidatoRepository.find();
+      const resultados = [];
+  
+      for (const candidato of candidatos) {
+        const votosComoPresidente = await this.votacionRepository.count({
+          where: { presidente: { _id: candidato._id } },
+        });
+  
+        const votosComoVicepresidente = await this.votacionRepository.count({
+          where: { vicepresidente: { _id: candidato._id } },
+        });
+  
+        resultados.push({
+          candidatoId: candidato._id,
+          nombre: `${candidato.nombre} ${candidato.apellido}`,
+          puesto: candidato.puesto,
+          totalVotos: votosComoPresidente + votosComoVicepresidente,
+        });
+      }
+  
+      resultados.sort((a, b) => b.totalVotos - a.totalVotos);
+  
+      return resultados;
+    } catch (error) {
+      throw new InternalServerErrorException('Error al obtener votos por candidato');
+    }
+  }
+  
   
 }

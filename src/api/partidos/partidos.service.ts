@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, MongoRepository, ObjectId, Repository } from 'typeorm';
 import { CandidatoEntity } from '../candidatos/entities/candidato.entity';
 import { NewPartidoDto } from './dto/new.dto';
+import { Socket } from 'src/shared/socket';
 
 @Injectable()
 export class PartidosService {
@@ -11,6 +12,7 @@ export class PartidosService {
     constructor(
         @InjectRepository(PartidoEntity)
         private readonly partidoRepository: Repository<PartidoEntity>,
+        private socket:Socket
       ) {}
     
       public async list(): Promise<PartidoEntity[]> {
